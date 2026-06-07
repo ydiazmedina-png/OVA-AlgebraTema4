@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OVA: Cambio de Base, Bases Ortonormales y Proyecciones</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['\\(', '\\)']],
+          displayMath: [['\\[', '\\]']]
+        },
+        options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+      };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+</head>
+<body class="bg-slate-50">
+<div class="flex min-h-screen">
+
+    <!-- SIDEBAR -->
+    <aside class="w-64 bg-white shadow-lg flex-shrink-0 hidden md:flex md:flex-col">
+        <div class="p-4">
+            <div style="width:150px;height:150px;" class="p-2 mx-auto flex items-center justify-center bg-white rounded-full shadow-lg border-2 border-green-500 hover:shadow-green-400 transition-shadow duration-300">
+                <img src="img/logo.webp" alt="Logo" class="w-5/6 h-5/6 object-contain" loading="lazy"
+                     onerror="this.style.display='none';this.parentElement.innerHTML='<span class=\'text-green-700 font-bold text-center text-xs p-2 block\'>Universidad de Córdoba</span>'">
+            </div>
+        </div>
+        <nav class="mt-6 flex-1">
+            <a href="#" class="sidebar-link active flex items-center py-3 px-6 font-medium text-slate-700" data-target="introduccion"><span class="mr-3 text-xl">🚀</span> Introducción</a>
+            <a href="#" class="sidebar-link flex items-center py-3 px-6 font-medium text-slate-700" data-target="objetivos"><span class="mr-3 text-xl">🎯</span> Objetivos</a>
+            <a href="#" class="sidebar-link flex items-center py-3 px-6 font-medium text-slate-700" data-target="contenido"><span class="mr-3 text-xl">📚</span> Contenido</a>
+            <a href="#" class="sidebar-link flex items-center py-3 px-6 font-medium text-slate-700" data-target="actividades"><span class="mr-3 text-xl">✍️</span> Actividades</a>
+            <a href="#" class="sidebar-link flex items-center py-3 px-6 font-medium text-slate-700" data-target="evaluacion"><span class="mr-3 text-xl">✔️</span> Evaluación</a>
+            <a href="#" class="sidebar-link flex items-center py-3 px-6 font-medium text-slate-700" data-target="recursos"><span class="mr-3 text-xl">📖</span> Recursos</a>
+            <a href="#" class="sidebar-link flex items-center py-3 px-6 font-medium text-slate-700" data-target="bibliografia"><span class="mr-3 text-xl">📚</span> Bibliografía</a>
+        </nav>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="flex-1 p-4 sm:p-6 md:p-10 bg-gray-50">
+
+        <!-- Mobile header -->
+        <div class="md:hidden mb-6 flex flex-col items-center">
+            <div style="width:100px;height:100px;" class="p-2 flex items-center justify-center bg-white rounded-full shadow-lg hover:shadow-green-400 transition-shadow duration-300 mb-2">
+                <img src="img/logo.webp" alt="Logo" class="w-5/6 h-5/6 object-contain" loading="lazy"
+                     onerror="this.style.display='none';this.parentElement.innerHTML='<span class=\'text-green-700 font-bold text-xs\'>UNICOR</span>'">
+            </div>
+            <select id="mobile-nav" class="w-full mt-2 p-2 border rounded-md bg-white shadow-sm">
+                <option value="introduccion">🚀 Introducción</option>
+                <option value="objetivos">🎯 Objetivos</option>
+                <option value="contenido">📚 Contenido</option>
+                <option value="actividades">✍️ Actividades</option>
+                <option value="evaluacion">✔️ Evaluación</option>
+                <option value="recursos">📖 Recursos</option>
+                <option value="bibliografia">📚 Bibliografía</option>
+            </select>
+        </div>
+
+        <!-- ══════════════ INTRODUCCIÓN ══════════════ -->
+        <div id="introduccion" class="content-pane active">
+            <h2 class="text-2xl sm:text-3xl font-bold text-green-800 mb-4">Cambio de Base, Bases Ortonormales y Proyecciones</h2>
+            <p class="text-slate-700 leading-relaxed mb-4">
+                Imagina que vives en una ciudad con calles orientadas al norte-sur y este-oeste. Ahora visitas otra ciudad con calles en diagonal. Para explicar cómo llegar a un lugar, necesitas un sistema de referencia diferente. <strong>El lugar es el mismo, pero sus coordenadas cambian según el mapa que uses.</strong> 🗺️
+            </p>
+            <p class="text-slate-700 leading-relaxed mb-4">
+                Esa es la idea del <strong>cambio de base</strong>: el vector no cambia, solo sus coordenadas. La segunda parte introduce las <strong>bases ortonormales</strong> y el proceso de <strong>Gram-Schmidt</strong> para construirlas. Las <strong>proyecciones ortogonales</strong> son la clave para mínimos cuadrados, PCA y regresión en ingeniería.
+            </p>
+            <div class="mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                <p class="text-green-800">✨ <strong>Conceptos fundamentales en procesamiento de imágenes, compresión de datos, machine learning y análisis de señales. 🚀📐💻</strong></p>
+            </div>
+
+            <!-- Síntesis de voz -->
+            <div class="speech-controls p-3 bg-green-100 rounded-lg flex items-center flex-wrap gap-2 mt-4" data-target="introduccion">
+                <button class="play-btn bg-green-600 hover:bg-green-700 text-white font-medium py-1 px-4 rounded-full flex items-center"><span class="mr-1">▶️</span> Leer</button>
+                <button class="pause-btn bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-1 px-4 rounded-full flex items-center" disabled><span class="mr-1">⏸️</span> Pausar</button>
+                <button class="stop-btn bg-red-500 hover:bg-red-600 text-white font-medium py-1 px-4 rounded-full flex items-center" disabled><span class="mr-1">⏹️</span> Detener</button>
+                <div class="flex items-center ml-2">
+                    <label for="sr-intro" class="text-sm text-green-800 mr-2">Velocidad:</label>
+                    <input type="range" class="speech-rate" id="sr-intro" min="0.5" max="2" step="0.1" value="1">
+                </div>
+            </div>
+
+            <!-- VIDEO introductorio -->
+            <div class="mt-8 bg-white rounded-xl shadow-md p-4 border border-green-200">
+                <div class="ratio-16x9 rounded-lg overflow-hidden video-embed">
+                    <iframe
+                        src="https://www.youtube.com/embed/VV1nRj7IQfY?start=12"
+                        title="Cambio de base - 3Blue1Brown"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                        style="position:absolute;top:0;left:0;width:100%;height:100%;">
+                    </iframe>
+                </div>
+                <p class="text-center text-sm text-slate-500 mt-3"> <em></em> </p>
+            </div>
+        </div>
+
+        <!-- ══════════════ OBJETIVOS ══════════════ -->
+        <div id="objetivos" class="content-pane">
+            <h2 class="text-2xl sm:text-3xl font-bold text-green-800 mb-6">Objetivos de aprendizaje</h2>
+            <ul class="space-y-4">
+                <li class="flex items-start p-4 bg-white rounded-lg shadow-sm"><span class="text-green-700 mr-3 text-2xl">🔄</span><span>Comprender la idea de <strong>cambio de base</strong>: el mismo vector puede tener distintas coordenadas según la base elegida.</span></li>
+                <li class="flex items-start p-4 bg-white rounded-lg shadow-sm"><span class="text-green-700 mr-3 text-2xl">🔢</span><span>Calcular coordenadas en una base no estándar usando la <strong>matriz de cambio de base \(P\)</strong>.</span></li>
+                <li class="flex items-start p-4 bg-white rounded-lg shadow-sm"><span class="text-green-700 mr-3 text-2xl">📐</span><span>Entender la <strong>ortogonalidad</strong> entre vectores y su relación con el producto escalar \(\mathbf{u} \cdot \mathbf{v} = 0\).</span></li>
+                <li class="flex items-start p-4 bg-white rounded-lg shadow-sm"><span class="text-green-700 mr-3 text-2xl">⭐</span><span>Reconocer una <strong>base ortonormal</strong> e identificar sus ventajas: \(Q^T Q = I\), \(Q^{-1} = Q^T\).</span></li>
+                <li class="flex items-start p-4 bg-white rounded-lg shadow-sm"><span class="text-green-700 mr-3 text-2xl">🔧</span><span>Aplicar el proceso de <strong>Gram-Schmidt</strong> para convertir cualquier base en una base ortonormal.</span></li>
+                <li class="flex items-start p-4 bg-white rounded-lg shadow-sm"><span class="text-green-700 mr-3 text-2xl">💡</span><span>Calcular la <strong>proyección ortogonal</strong> \(\text{proy}_{\mathbf{u}}(\mathbf{v}) = \dfrac{\mathbf{v} \cdot \mathbf{u}}{\mathbf{u} \cdot \mathbf{u}}\,\mathbf{u}\) sobre una recta o subespacio.</span></li>
+            </ul>
+            <div class="speech-controls p-3 bg-green-100 rounded-lg flex items-center flex-wrap gap-2 mt-6" data-target="objetivos">
+                <button class="play-btn bg-green-600 hover:bg-green-700 text-white font-medium py-1 px-4 rounded-full flex items-center"><span class="mr-1">▶️</span> Leer</button>
+                <button class="pause-btn bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-1 px-4 rounded-full flex items-center" disabled><span class="mr-1">⏸️</span> Pausar</button>
+                <button class="stop-btn bg-red-500 hover:bg-red-600 text-white font-medium py-1 px-4 rounded-full flex items-center" disabled><span class="mr-1">⏹️</span> Detener</button>
+                <div class="flex items-center ml-2">
+                    <label for="sr-obj" class="text-sm text-green-800 mr-2">Velocidad:</label>
+                    <input type="range" class="speech-rate" id="sr-obj" min="0.5" max="2" step="0.1" value="1">
+                </div>
+            </div>
+        </div>
+
+<!-- ══════════════ CONTENIDO ══════════════ -->
+<div id="contenido" class="content-pane">
+    <h2 class="text-2xl sm:text-3xl font-bold text-green-800 mb-4">Desarrollo del Contenido</h2>
+
+    <!-- ── BARRA DE PESTAÑAS PRINCIPALES ── -->
+    <div class="flex flex-wrap gap-1 mb-0 border-b-2 border-green-300">
+        <button onclick="showMainTab('tab-cb')" id="main-tab-cb"
+            class="main-tab-btn px-3 py-2 text-sm font-semibold rounded-t-lg border-2 border-b-0 border-green-400 bg-green-600 text-white transition-all">
+            🔄 Cambio de Base
+        </button>
+        <button onclick="showMainTab('tab-pe')" id="main-tab-pe"
+            class="main-tab-btn px-3 py-2 text-sm font-semibold rounded-t-lg border-2 border-b-0 border-green-200 bg-white text-slate-500 hover:text-green-700 transition-all">
+            ✖️ Producto Escalar
+        </button>
+        <button onclick="showMainTab('tab-on')" id="main-tab-on"
+            class="main-tab-btn px-3 py-2 text-sm font-semibold rounded-t-lg border-2 border-b-0 border-green-200 bg-white text-slate-500 hover:text-green-700 transition-all">
+            ⭐ Bases Ortonormales
+        </button>
+        <button onclick="showMainTab('tab-gs')" id="main-tab-gs"
+            class="main-tab-btn px-3 py-2 text-sm font-semibold rounded-t-lg border-2 border-b-0 border-green-200 bg-white text-slate-500 hover:text-green-700 transition-all">
+            🔧 Gram-Schmidt
+        </button>
+        <button onclick="showMainTab('tab-py')" id="main-tab-py"
+            class="main-tab-btn px-3 py-2 text-sm font-semibold rounded-t-lg border-2 border-b-0 border-green-200 bg-white text-slate-500 hover:text-green-700 transition-all">
+            💡 Proyección
+        </button>
+    </div>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- TAB 1: CAMBIO DE BASE                     -->
+    <!-- ══════════════════════════════════════════ -->
+    <div id="tab-cb" class="main-tab-content bg-white border-2 border-green-300 border-t-0 rounded-b-xl p-5">
+        <!-- Sub-pestañas -->
+        <div class="flex gap-2 mb-5 border-b border-green-200 flex-wrap">
+            <button onclick="showSub('cb','teoria')" id="cb-tab-teoria"
+                class="sub-tab-cb px-4 py-2 rounded-t-lg text-sm font-semibold border-b-2 border-green-600 text-green-700 bg-green-50">
+                📖 Teoría
+            </button>
+            <button onclick="showSub('cb','ejemplos')" id="cb-tab-ejemplos"
+                class="sub-tab-cb px-4 py-2 rounded-t-lg text-sm font-semibold border-b-2 border-transparent text-slate-500 hover:text-green-700">
+                📌 Ejemplos
+            </button>
+            <button onclick="showSub('cb','simulador')" id="cb-tab-simulador"
+                class="sub-tab-cb px-4 py-2 rounded-t-lg text-sm font-semibold border-b-2 border-transparent text-slate-500 hover:text-green-700">
+                ⚙️ Simulador
+            </button>
+        </div>
+
+        <!-- CB: TEORÍA -->
+        <div id="cb-teoria" class="sub-cb space-y-5 text-slate-700">
+            <div class="bg-blue-50 border-l-4 border-blue-400 rounded-r-xl p-5">
+                <h4 class="font-bold text-blue-800 mb-2">🏙️ Idea central: mismo vector, distintas coordenadas</h4>
+                <p class="text-sm">Un vector es un objeto geométrico que <strong>no cambia</strong>. Lo que cambia son sus coordenadas según la base elegida. Como 100 °C y 212 °F: misma temperatura, distintos números según la escala.</p>
+            </div>
+
+            <div class="bg-green-50 border-l-4 border-green-500 rounded-r-xl p-5 shadow">
+                <p class="font-bold text-green-900 text-lg mb-2">📖 Coordenadas en una base</p>
+                <p class="text-sm mb-1">Si \(B = \{v_1,\ldots,v_n\}\) es base de \(V\), todo \(\mathbf{w}\in V\) se escribe de forma <em>única</em> como:</p>
+                \[\mathbf{w} = c_1 v_1 + c_2 v_2 + \cdots + c_n v_n\]
+                <p class="text-sm mt-2">Los escalares \((c_1,\ldots,c_n)\) son las <strong>coordenadas de \(\mathbf{w}\) en \(B\)</strong>:
+                \(\;[\mathbf{w}]_B = (c_1,\ldots,c_n)\).</p>
+            </div>
+
+            <div class="bg-green-50 border-l-4 border-green-500 rounded-r-xl p-5 shadow">
+                <p class="font-bold text-green-900 text-lg mb-2">📖 Matriz de Cambio de Base</p>
+                <p class="text-sm mb-2">Sea \(B=\{b_1,b_2,\ldots,b_n\}\) base de \(\mathbb{R}^n\). La <strong>matriz de cambio de base</strong> se forma poniendo los vectores de \(B\) como <em>columnas</em>:</p>
+                \[P = \begin{bmatrix} \mathbf{b}_1 & \mathbf{b}_2 & \cdots & \mathbf{b}_n \end{bmatrix}\]
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+                    <div class="bg-white rounded-lg p-3 border border-green-200 text-center">
+                        <p class="font-semibold text-green-700 text-sm mb-1">De \(B \to E\) (estándar)</p>
+                        \[[\mathbf{w}]_E = P\,[\mathbf{w}]_B\]
+                    </div>
+                    <div class="bg-white rounded-lg p-3 border border-green-200 text-center">
+                        <p class="font-semibold text-green-700 text-sm mb-1">De \(E \to B\)</p>
+                        \[[\mathbf{w}]_B = P^{-1}[\mathbf{w}]_E\]
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjetas flip -->
+            <h4 class="font-bold text-green-800">🃏 Conceptos clave — haz clic para revelar</h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="flip-card h-40 cursor-pointer" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-inner">
+                        <div class="flip-front bg-green-100 border-2 border-green-400 rounded-xl flex flex-col items-center justify-center p-4">
+                            <span class="text-3xl mb-2">📐</span>
+                            <p class="font-bold text-green-800 text-center text-sm">¿Qué son las coordenadas de un vector?</p>
+                            <p class="text-xs text-green-600 mt-2">Clic para revelar</p>
+                        </div>
+                        <div class="flip-back bg-green-700 rounded-xl flex flex-col items-center justify-center p-4">
+                            <p class="text-white text-sm text-center">Los escalares únicos \(c_1,\ldots,c_n\) tales que \(\mathbf{w}=c_1 v_1+\cdots+c_n v_n\). Se escriben \([\mathbf{w}]_B\).</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flip-card h-40 cursor-pointer" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-inner">
+                        <div class="flip-front bg-blue-100 border-2 border-blue-400 rounded-xl flex flex-col items-center justify-center p-4">
+                            <span class="text-3xl mb-2">🔢</span>
+                            <p class="font-bold text-blue-800 text-center text-sm">¿Qué es la matriz \(P\)?</p>
+                            <p class="text-xs text-blue-600 mt-2">Clic para revelar</p>
+                        </div>
+                        <div class="flip-back bg-blue-700 rounded-xl flex flex-col items-center justify-center p-4">
+                            <p class="text-white text-sm text-center">La matriz cuyas <strong>columnas</strong> son los vectores de la base \(B\) en coordenadas estándar: \(P=[b_1\mid b_2\mid\cdots\mid b_n]\).</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flip-card h-40 cursor-pointer" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-inner">
+                        <div class="flip-front bg-purple-100 border-2 border-purple-400 rounded-xl flex flex-col items-center justify-center p-4">
+                            <span class="text-3xl mb-2">➡️</span>
+                            <p class="font-bold text-purple-800 text-center text-sm">¿Cómo paso de \(B\) al estándar?</p>
+                            <p class="text-xs text-purple-600 mt-2">Clic para revelar</p>
+                        </div>
+                        <div class="flip-back bg-purple-700 rounded-xl flex flex-col items-center justify-center p-4">
+                            <p class="text-white text-sm text-center">Multiplicando por \(P\):<br>\([\mathbf{w}]_E = P\cdot[\mathbf{w}]_B\)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flip-card h-40 cursor-pointer" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-inner">
+                        <div class="flip-front bg-orange-100 border-2 border-orange-400 rounded-xl flex flex-col items-center justify-center p-4">
+                            <span class="text-3xl mb-2">⬅️</span>
+                            <p class="font-bold text-orange-800 text-center text-sm">¿Cómo paso del estándar a \(B\)?</p>
+                            <p class="text-xs text-orange-600 mt-2">Clic para revelar</p>
+                        </div>
+                        <div class="flip-back bg-orange-600 rounded-xl flex flex-col items-center justify-center p-4">
+                            <p class="text-white text-sm text-center">Multiplicando por la inversa:<br>\([\mathbf{w}]_B = P^{-1}\cdot[\mathbf{w}]_E\)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-yellow-50 border-2 border-dashed border-yellow-400 rounded-xl p-4">
+                <h4 class="font-bold text-yellow-800 mb-1">⚠️ El orden de las columnas importa</h4>
+                <p class="text-sm">La primera columna de \(P\) debe ser \(b_1\), la segunda \(b_2\), etc. Cambiar el orden da resultados incorrectos.</p>
+            </div>
+            <div class="bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-5 border-l-4 border-purple-500">
+                <h4 class="font-bold text-purple-800 mb-2">💻 Aplicación — Espacios de color</h4>
+                <p class="text-sm">RGB, HSV y CMYK son distintas <strong>bases</strong> del mismo espacio vectorial de colores. Las conversiones entre ellos son exactamente <strong>matrices de cambio de base</strong>.</p>
+            </div>
+        </div>
+
+        <!-- CB: EJEMPLOS -->
+        <div id="cb-ejemplos" class="sub-cb hidden space-y-5 text-slate-700">
+            <div class="bg-blue-50 border-l-4 border-blue-500 rounded-r-lg p-5">
+                <h4 class="font-bold text-blue-800 mb-3">📌 Ejemplo 1 — De \(B\) a base estándar</h4>
+                <p class="text-sm mb-2">Sea \(B=\{(2,1),(0,1)\}\) y \([\mathbf{w}]_B=(3,2)\). Hallar \(\mathbf{w}\) en coordenadas estándar.</p>
+                <div class="bg-white rounded-lg p-4 border border-blue-200 space-y-3">
+                    <p class="text-sm font-semibold text-blue-700">Paso 1 — Construir \(P\):</p>
+                    \[P = \begin{bmatrix}2&0\\1&1\end{bmatrix}\]
+                    <p class="text-sm font-semibold text-blue-700">Paso 2 — Multiplicar:</p>
+                    \[[\mathbf{w}]_E = \begin{bmatrix}2&0\\1&1\end{bmatrix}\begin{bmatrix}3\\2\end{bmatrix} = \begin{bmatrix}6\\5\end{bmatrix}\]
+                </div>
+                <div class="mt-3 bg-green-100 rounded p-2 text-green-800 text-sm font-semibold">✅ \(\mathbf{w}=(6,5)\). Verificación: \(3(2,1)+2(0,1)=(6,5)\) ✓</div>
+            </div>
+
+            <div class="bg-purple-50 border-l-4 border-purple-500 rounded-r-lg p-5">
+                <h4 class="font-bold text-purple-800 mb-3">📌 Ejemplo 2 — De estándar a \(B\)</h4>
+                <p class="text-sm mb-2">Con la misma \(B\). Si \(\mathbf{v}=(4,3)\), hallar \([\mathbf{v}]_B\).</p>
+                <div class="bg-white rounded-lg p-4 border border-purple-200 space-y-3">
+                    <p class="text-sm font-semibold text-purple-700">Paso 1 — Calcular \(P^{-1}\):</p>
+                    \[\det(P)=2 \implies P^{-1}=\begin{bmatrix}1/2&0\\-1/2&1\end{bmatrix}\]
+                    <p class="text-sm font-semibold text-purple-700">Paso 2 — Multiplicar:</p>
+                    \[[\mathbf{v}]_B=\begin{bmatrix}1/2&0\\-1/2&1\end{bmatrix}\begin{bmatrix}4\\3\end{bmatrix}=\begin{bmatrix}2\\1\end{bmatrix}\]
+                </div>
+                <div class="mt-3 bg-purple-100 rounded p-2 text-purple-800 text-sm font-semibold">✅ \([\mathbf{v}]_B=(2,1)\). Verificación: \(2(2,1)+1(0,1)=(4,3)\) ✓</div>
+            </div>
+
+            <div class="bg-red-50 border-l-4 border-red-400 rounded-r-lg p-5">
+                <h4 class="font-bold text-red-800 mb-2">⚠️ Error frecuente — vectores como filas</h4>
+                <p class="text-sm mb-2">¿Qué pasa si ponemos los vectores como <strong>filas</strong> en lugar de columnas?</p>
+                \[P_{\text{incorrecto}}=\begin{bmatrix}2&1\\0&1\end{bmatrix} \neq P_{\text{correcto}}=\begin{bmatrix}2&0\\1&1\end{bmatrix}\]
+                <p class="text-sm text-red-700 font-semibold mt-2">❌ Resultado incorrecto: \(P_\text{incorrecto}\cdot(3,2)^T=(8,2)\neq(6,5)\)</p>
+            </div>
+        </div>
+
+        <!-- CB: SIMULADOR -->
+        <div id="cb-simulador" class="sub-cb hidden">
+            <div class="bg-green-50 rounded-xl p-5 border border-green-200">
+                <h4 class="font-bold text-green-800 mb-3">⚙️ Simulador de Cambio de Base en \(\mathbb{R}^2\)</h4>
+                <p class="text-sm text-slate-600 mb-4">Define la base \(B\) y las coordenadas del vector. El simulador calculará \([\mathbf{w}]_E\) y lo mostrará gráficamente.</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                    <div class="bg-white rounded-lg p-4 border border-green-200">
+                        <p class="font-semibold text-green-800 mb-2">Base \(B=\{b_1,b_2\}\)</p>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex items-center gap-1 flex-wrap">
+                                <span>\(b_1=(\)</span>
+                                <input type="number" id="cb-b1x" value="2" class="w-14 border rounded px-1 py-1 text-center font-mono" step="0.5">
+                                <span>,</span>
+                                <input type="number" id="cb-b1y" value="1" class="w-14 border rounded px-1 py-1 text-center font-mono" step="0.5">
+                                <span>\()\)</span>
+                            </div>
+                            <div class="flex items-center gap-1 flex-wrap">
+                                <span>\(b_2=(\)</span>
+                                <input type="number" id="cb-b2x" value="0" class="w-14 border rounded px-1 py-1 text-center font-mono" step="0.5">
+                                <span>,</span>
+                                <input type="number" id="cb-b2y" value="1" class="w-14 border rounded px-1 py-1 text-center font-mono" step="0.5">
+                                <span>\()\)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg p-4 border border-blue-200">
+                        <p class="font-semibold text-blue-800 mb-2">Coordenadas en \(B\)</p>
+                        <div class="flex items-center gap-1 flex-wrap text-sm">
+                            <span>\([\mathbf{w}]_B=(\)</span>
+                            <input type="number" id="cb-c1" value="3" class="w-14 border rounded px-1 py-1 text-center font-mono" step="0.5">
+                            <span>,</span>
+                            <input type="number" id="cb-c2" value="2" class="w-14 border rounded px-1 py-1 text-center font-mono" step="0.5">
+                            <span>\()\)</span>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="calcularCambioBase()" class="bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-700 transition-colors mb-4">🔄 Calcular</button>
+                <div id="cb-resultado" class="hidden bg-white rounded-lg p-3 border border-green-300 mb-4 font-mono text-green-800 text-sm" id="cb-resultado-texto"></div>
+                <canvas id="cb-canvas" width="420" height="320" class="w-full rounded-lg border border-green-300 bg-white" style="max-width:420px;display:block;margin:0 auto;"></canvas>
+                <p class="text-xs text-slate-400 text-center mt-2">🟢 \(b_1\cdot c_1\) &nbsp; 🔵 \(b_2\cdot c_2\) &nbsp; 🔴 \(\mathbf{w}\) resultado</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- TAB 2: PRODUCTO ESCALAR                   -->
+    <!-- ══════════════════════════════════════════ -->
+    <div id="tab-pe" class="main-tab-content hidden bg-white border-2 border-green-300 border-t-0 rounded-b-xl p-5">
+        <div class="flex gap-2 mb-5 border-b border-green-200 flex-wrap">
+            <button onclick="showSub('pe','teoria')" id="pe-tab-teoria"
+                class="sub-tab-pe px-4 py-2 rounded-t-lg text-sm font-semibold border-b-2 border-green-600 text-green-700 bg-green-50">📖 Teoría</button>
+            <button onclick="showSub('pe','simulador')" id="pe-tab-simulador"
+                class="sub-tab-pe px-4 py-2 rounded-t-lg text-sm font-semibold border-b-2 border-transparent text-slate-500 hover:text-green-700">⚙️ Simulador</button>
+        </div>
+
+        <!-- PE: TEORÍA -->
+        <div id="pe-teoria" class="sub-pe space-y-5 text-slate-700">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-green-50 border-2 border-green-300 rounded-xl p-4 text-center hover:shadow-lg transition-shadow">
+                    <div class="text-3xl mb-2">✖️</div>
+                    <p class="font-bold text-green-800 mb-1">Producto Escalar</p>
+                    \[\mathbf{u}\cdot\mathbf{v}=\sum_{i=1}^n u_i v_i\]
+                    <p class="text-xs text-slate-500 mt-2">Resultado: número real</p>
+                </div>
+                <div class="bg-blue-50 border-2 border-blue-300 rounded-xl p-4 text-center hover:shadow-lg transition-shadow">
+                    <div class="text-3xl mb-2">📏</div>
+                    <p class="font-bold text-blue-800 mb-1">Norma</p>
+                    \[\|\mathbf{v}\|=\sqrt{\mathbf{v}\cdot\mathbf{v}}\]
+                    <p class="text-xs text-slate-500 mt-2">Longitud del vector</p>
+                </div>
+                <div class="bg-purple-50 border-2 border-purple-300 rounded-xl p-4 text-center hover:shadow-lg transition-shadow">
+                    <div class="text-3xl mb-2">⊥</div>
+                    <p class="font-bold text-purple-800 mb-1">Ortogonalidad</p>
+                    \[\mathbf{u}\cdot\mathbf{v}=0\]
+                    <p class="text-xs text-slate-500 mt-2">Ángulo = 90°</p>
+                </div>
+            </div>
+
+            <div class="bg-yellow-50 border-l-4 border-yellow-500 rounded-r-xl p-5">
+                <h4 class="font-bold text-yellow-800 mb-3">🔗 Relación con el ángulo</h4>
+                \[\mathbf{u}\cdot\mathbf{v}=\|\mathbf{u}\|\,\|\mathbf{v}\|\cos\theta\]
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-3 text-sm text-center">
+                    <div class="bg-green-100 rounded-lg p-3">
+                        <p class="font-bold text-green-700">\(\theta=0°\)</p>
+                        <p>\(\mathbf{u}\cdot\mathbf{v}=\|\mathbf{u}\|\|\mathbf{v}\|\)</p>
+                        <p class="text-xs">Mismo sentido</p>
+                    </div>
+                    <div class="bg-blue-100 rounded-lg p-3">
+                        <p class="font-bold text-blue-700">\(\theta=90°\)</p>
+                        <p>\(\mathbf{u}\cdot\mathbf{v}=0\)</p>
+                        <p class="text-xs">Perpendiculares</p>
+                    </div>
+                    <div class="bg-red-100 rounded-lg p-3">
+                        <p class="font-bold text-red-700">\(\theta=180°\)</p>
+                        <p>\(\mathbf{u}\cdot\mathbf{v}=-\|\mathbf{u}\|\|\mathbf{v}\|\)</p>
+                        <p class="text-xs">Sentidos opuestos</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-green-50 border-l-4 border-green-500 rounded-r-xl p-5">
+                <h4 class="font-bold text-green-800 mb-3">📋 Propiedades</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                    <div class="bg-white rounded-lg p-3 border border-green-200">
+                        <p class="font-semibold text-green-700">Conmutatividad</p>
+                        \[\mathbf{u}\cdot\mathbf{v}=\mathbf{v}\cdot\mathbf{u}\]
+                    </div>
+                    <div class="bg-white rounded-lg p-3 border border-green-200">
+                        <p class="font-semibold text-green-700">Distributividad</p>
+                        \[\mathbf{u}\cdot(\mathbf{v}+\mathbf{w})=\mathbf{u}\cdot\mathbf{v}+\mathbf{u}\cdot\mathbf{w}\]
+                    </div>
+                    <div class="bg-white rounded-lg p-3 border border-green-200">
+                        <p class="font-semibold text-green-700">Escalar</p>
+                        \[(c\,\mathbf{u})\cdot\mathbf{v}=c\,(\mathbf{u}\cdot\mathbf{v})\]
+                    </div>
+                    <div class="bg-white rounded-lg p-3 border border-green-200">
+                        <p class="font-semibold text-green-700">Norma al cuadrado</p>
+                        \[\mathbf{v}\cdot\mathbf{v}=\|\mathbf{v}\|^2\ge 0\]
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <div class="bg-blue-50 border-l-4 border-blue-500 rounded-r-lg p-4">
+                    <h4 class="font-bold text-blue-800 mb-2">📌 Ejemplo — Norma y vector unitario</h4>
+                    <p class="text-sm mb-1">Sea \(\mathbf{v}=(3,4)\):</p>
+                    \[\|\mathbf{v}\|=\sqrt{3^2+4^2}=\sqrt{25}=5\]
+                    \[\hat{v}=\frac{\mathbf{v}}{\|\mathbf{v}\|}=\left(\frac{3}{5},\frac{4}{5}\right)=(0.6,\,0.8)\]
+                    <div class="mt-2 bg-green-100 rounded p-2 text-green-800 text-sm">Verificación: \(\|(0.6,0.8)\|=\sqrt{0.36+0.64}=1\) ✓</div>
+                </div>
+                <div class="bg-green-50 border-l-4 border-green-500 rounded-r-lg p-4">
+                    <h4 class="font-bold text-green-800 mb-2">📌 Ejemplo — Ortogonalidad</h4>
+                    <p class="text-sm mb-1"><strong>Par (a):</strong> \(\mathbf{u}=(1,2,3)\), \(\mathbf{v}=(1,1,-1)\)</p>
+                    \[\mathbf{u}\cdot\mathbf{v}=1+2-3=0 \implies \text{✅ ORTOGONALES}\]
+                    <p class="text-sm mt-2 mb-1"><strong>Par (b):</strong> \(\mathbf{u}=(2,1)\), \(\mathbf{v}=(1,3)\)</p>
+                    \[\mathbf{u}\cdot\mathbf{v}=2+3=5\neq 0 \implies \text{❌ NO ortogonales}\]
+                </div>
+            </div>
+        </div>
+
+        <!-- PE: SIMULADOR -->
+        <div id="pe-simulador" class="sub-pe hidden">
+            <div class="bg-green-50 rounded-xl p-5 border border-green-200">
+                <h4 class="font-bold text-green-800 mb-3">⚙️ Simulador — Producto Escalar y Ángulo en \(\mathbb{R}^2\)</h4>
+                <p class="text-sm text-slate-600 mb-4">Ingresa dos vectores y visualiza su relación geométrica:</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                    <div class="bg-white rounded-lg p-4 border border-green-200">
+                        <p class="font-semibold text-green-700 mb-2">Vector \(\mathbf{u}\)</p>
+                        <div class="flex items-center gap-1 flex-wrap text-sm">
+                            <span>\(\mathbf{u}=(\)</span>
+                            <input type="number" id="pe-u1" value="3" class="w-14 border rounded px-1 py-1 text-center font-mono" step="0.5">
+                            <span>,</span>
+                            <input type="number" id="pe-u2" value="1" class="w-14 border rounded px-1 py-1 text-center font-mono" step="0.5">
+                            <span>\()\)</span>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg p-4 border border-blue-200">
+                        <p class="font-semibold text-blue-700 mb-2">Vector \(\mathbf{v}\)</p>
+                        <div class="flex items-center gap-1 flex-wrap text-sm">
+                            <span>\(\mathbf{v}=(\)</span>
+                            <input type="number" id="pe-v1" value="1" class="w-14 border rounded px-1 py-1 text-center font-mono" step="0.5">
+                            <span>,</span>
+                            <input type="number" id="pe-v2" value="3" class="w-14 border rounded px-1 py-1 text-center font-mono" step="0.5">
+                            <span>\()\)</span>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="calcularProducto()" class="bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-700 transition-colors mb-4">⚙️ Calcular</button>
+                <div id="pe-resultado" class="hidden bg-white rounded-lg p-4 border border-green-300 mb-4 text-sm space-y-1">
+                    <p id="pe-dot"></p><p id="pe-normu"></p><p id="pe-normv"></p>
+                    <p id="pe-angulo"></p><p id="pe-ortog" class="font-bold text-lg"></p>
+                </div>
+                <canvas id="pe-canvas" width="420" height="320" class="w-full rounded-lg border border-green-300 bg-white" style="max-width:420px;display:block;margin:0 auto;"></canvas>
+                <p class="text-xs text-slate-400 text-center mt-2">🟢 \(\mathbf{u}\) &nbsp; 🔵 \(\mathbf{v}\) &nbsp; El ángulo se muestra en amarillo</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- TAB 3: BASES ORTONORMALES                 -->
+    <!-- ══════════════════════════════════════════ -->
+    <div id="tab-on" class="main-tab-content hidden bg-white border-2 border-green-300 border-t-0 rounded-b-xl p-5">
+        <div class="flex gap-2 mb-5 border-b border-green-200 flex-wrap">
+            <button onclick="showSub('on','teoria')" id="on-tab-teoria"
+                class="sub-tab-on px-4 py-2 rounded-t-lg text-sm font-semibold border-b-2 border-green-600 text-green-700 bg-green-50">📖 Teoría</button>
+            <button onclick="showSub('on','verificador')" id="on-tab-verificador"
+                class="sub-tab-on px-4 py-2 rounded-t-lg text-sm font-semibold border-b-2 border-transparent text-slate-500 hover:text-green-700">✅ Verificador</button>
+        </div>
+
+        <!-- ON: TEORÍA -->
+        <div id="on-teoria" class="sub-on space-y-5 text-slate-700">
+            <div class="bg-green-50 border-l-4 border-green-500 rounded-r-xl p-5 shadow">
+                <p class="font-bold text-green-900 text-lg mb-2">📖 Definición — Base Ortonormal</p>
+                <p class="text-sm mb-2">\(\{q_1,\ldots,q_n\}\) es <strong>ORTONORMAL</strong> si:</p>
+                \[q_i\cdot q_j=\delta_{ij}=\begin{cases}1&\text{si }i=j\\0&\text{si }i\neq j\end{cases}\]
+                <p class="text-sm mt-2">En notación matricial con \(Q=[q_1\mid\cdots\mid q_n]\):</p>
+                \[Q^TQ=I\]
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-slate-50 border-2 border-slate-300 rounded-xl p-4">
+                    <p class="font-bold text-slate-700 mb-3 text-center">Base cualquiera 😐</p>
+                    <div class="space-y-2 text-sm">
+                        <div class="bg-white rounded-lg p-2 border border-slate-200">
+                            <p class="text-slate-500 text-xs">Coordenadas de \(\mathbf{w}\):</p>
+                            <p class="font-mono text-red-600 text-xs">Resolver sistema \(Pc=\mathbf{w}\)</p>
+                        </div>
+                        <div class="bg-white rounded-lg p-2 border border-slate-200">
+                            <p class="text-slate-500 text-xs">Invertir \(P\):</p>
+                            <p class="font-mono text-red-600 text-xs">Eliminación gaussiana</p>
+                        </div>
+                        <div class="bg-white rounded-lg p-2 border border-slate-200">
+                            <p class="text-slate-500 text-xs">Verificar:</p>
+                            <p class="font-mono text-red-600 text-xs">Calcular todos \(u_i\cdot u_j\)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-green-50 border-2 border-green-400 rounded-xl p-4">
+                    <p class="font-bold text-green-700 mb-3 text-center">Base Ortonormal ⭐</p>
+                    <div class="space-y-2 text-sm">
+                        <div class="bg-white rounded-lg p-2 border border-green-200">
+                            <p class="text-slate-500 text-xs">Coordenadas de \(\mathbf{w}\):</p>
+                            <p class="font-mono text-green-600 text-xs">\(c_i=\mathbf{w}\cdot q_i\) ✅</p>
+                        </div>
+                        <div class="bg-white rounded-lg p-2 border border-green-200">
+                            <p class="text-slate-500 text-xs">Invertir \(Q\):</p>
+                            <p class="font-mono text-green-600 text-xs">\(Q^{-1}=Q^T\) ✅</p>
+                        </div>
+                        <div class="bg-white rounded-lg p-2 border border-green-200">
+                            <p class="text-slate-500 text-xs">Verificar:</p>
+                            <p class="font-mono text-green-600 text-xs">\(Q^TQ=I\) ✅</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-yellow-50 border-2 border-yellow-400 rounded-xl p-5 text-center">
+                <h4 class="font-bold text-yellow-800 mb-2">✨ Fórmula mágica para coordenadas</h4>
+                \[[\mathbf{w}]_Q=(\mathbf{w}\cdot q_1,\;\mathbf{w}\cdot q_2,\;\ldots,\;\mathbf{w}\cdot q_n)\]
+                <p class="text-sm text-slate-500 mt-2">¡Solo \(n\) productos escalares, sin sistemas de ecuaciones!</p>
+            </div>
+
+            <div class="bg-purple-50 border-l-4 border-purple-500 rounded-r-lg p-5">
+                <h4 class="font-bold text-purple-800 mb-2">📌 Ejemplo — Coordenadas en base ortonormal</h4>
+                <p class="text-sm mb-1">Sea \(Q=\left\{\left(\tfrac{1}{\sqrt{2}},\tfrac{1}{\sqrt{2}}\right),\left(-\tfrac{1}{\sqrt{2}},\tfrac{1}{\sqrt{2}}\right)\right\}\) y \(\mathbf{w}=(3,1)\).</p>
+                \[c_1=\mathbf{w}\cdot q_1=\frac{4}{\sqrt{2}}=2\sqrt{2}\approx 2.83\]
+                \[c_2=\mathbf{w}\cdot q_2=\frac{-2}{\sqrt{2}}=-\sqrt{2}\approx -1.41\]
+                <div class="mt-2 bg-purple-100 rounded p-2 text-purple-800 text-sm font-semibold">✅ \([\mathbf{w}]_Q=(2\sqrt{2},-\sqrt{2})\) — sin resolver ningún sistema.</div>
+            </div>
+        </div>
+
+        <!-- ON: VERIFICADOR -->
+        <div id="on-verificador" class="sub-on hidden">
+            <div class="bg-green-50 rounded-xl p-5 border border-green-200">
+                <h4 class="font-bold text-green-800 mb-3">✅ Verificador de Base Ortonormal en \(\mathbb{R}^2\)</h4>
+                <p class="text-sm text-slate-600 mb-4">Ingresa dos vectores y verifica si forman una base ortonormal:</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                    <div class="bg-white rounded-lg p-4 border border-green-200">
+                        <p class="font-semibold text-green-700 mb-2">Vector \(q_1\)</p>
+                        <div class="flex items-center gap-1 flex-wrap text-sm">
+                            <span>\(q_1=(\)</span>
+                            <input type="number" id="on-q1x" value="0.707" step="0.001" class="w-16 border rounded px-1 py-1 text-center font-mono text-xs">
+                            <span>,</span>
+                            <input type="number" id="on-q1y" value="0.707" step="0.001" class="w-16 border rounded px-1 py-1 text-center font-mono text-xs">
+                            <span>\()\)</span>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg p-4 border border-blue-200">
+                        <p class="font-semibold text-blue-700 mb-2">Vector \(q_2\)</p>
+                        <div class="flex items-center gap-1 flex-wrap text-sm">
+                            <span>\(q_2=(\)</span>
+                            <input type="number" id="on-q2x" value="-0.707" step="0.001" class="w-16 border rounded px-1 py-1 text-center font-mono text-xs">
+                            <span>,</span>
+                            <input type="number" id="on-q2y" value="0.707" step="0.001" class="w-16 border rounded px-1 py-1 text-center font-mono text-xs">
+                            <span>\()\)</span>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="verificarOrtonormal()" class="bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-700 transition-colors mb-4">✅ Verificar</button>
+                <div id="on-resultado" class="hidden bg-white rounded-lg p-4 border border-green-300 space-y-1 text-sm"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- TAB 4: GRAM-SCHMIDT                       -->
+    <!-- ══════════════════════════════════════════ -->
+    <div id="tab-gs" class="main-tab-content hidden bg-white border-2 border-green-300 border-t-0 rounded-b-xl p-5">
+        <div class="flex gap-2 mb-5 border-b border-green-200 flex-wrap">
+            <button onclick="showSub('gs','pasos')" id="gs-tab-pasos"
+                class="sub-tab-gs px-4 py-2 rounded-t-lg text-sm font-semibold border-b-2 border-green-600 text-green-700 bg-green-50">📋 Paso a paso</button>
+            <button onclick="showSub('gs','simulador')" id="gs-tab-simulador"
+                class="sub-tab-gs px-4 py-2 rounded-t-lg text-sm font-semibold border-b-2 border-transparent text-slate-500 hover:text-green-700">⚙️ Simulador</button>
+        </div>
+
+        <!-- GS: PASOS -->
+        <div id="gs-pasos" class="sub-gs space-y-4 text-slate-700">
+            <div class="bg-blue-50 border-l-4 border-blue-400 rounded-r-xl p-4">
+                <h4 class="font-bold text-blue-800 mb-1">🎯 ¿Para qué sirve?</h4>
+                <p class="text-sm">Convierte cualquier base en una <strong>base ortonormal que genera el mismo espacio</strong>. Clave en PCA, descomposición QR y mínimos cuadrados.</p>
+            </div>
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 rounded-r-lg p-4">
+                <p class="font-bold text-yellow-800 mb-1">🔑 Fórmula de proyección (núcleo del proceso):</p>
+                \[\operatorname{proy}(\mathbf{v},\mathbf{u})=\frac{\mathbf{v}\cdot\mathbf{u}}{\mathbf{u}\cdot\mathbf{u}}\;\mathbf{u}\]
+            </div>
+
+            <!-- Pasos animados -->
+            <div class="flex items-center gap-2 mb-2 flex-wrap">
+                <div id="gs-prog-1" class="w-9 h-9 rounded-full bg-green-600 text-white flex items-center justify-center font-bold text-sm cursor-pointer select-none" onclick="mostrarPasoGS(1)">1</div>
+                <div class="flex-1 h-1 bg-green-200 rounded min-w-4"></div>
+                <div id="gs-prog-2" class="w-9 h-9 rounded-full bg-slate-300 text-white flex items-center justify-center font-bold text-sm cursor-pointer select-none" onclick="mostrarPasoGS(2)">2</div>
+                <div class="flex-1 h-1 bg-green-200 rounded min-w-4"></div>
+                <div id="gs-prog-3" class="w-9 h-9 rounded-full bg-slate-300 text-white flex items-center justify-center font-bold text-sm cursor-pointer select-none" onclick="mostrarPasoGS(3)">3</div>
+                <div class="flex-1 h-1 bg-green-200 rounded min-w-4"></div>
+                <div id="gs-prog-4" class="w-9 h-9 rounded-full bg-slate-300 text-white flex items-center justify-center font-bold text-sm cursor-pointer select-none" onclick="mostrarPasoGS(4)">4</div>
+            </div>
+
+            <div id="gs-step-1" class="gs-step bg-green-50 border-2 border-green-400 rounded-xl p-5">
+                <h4 class="font-bold text-green-800 mb-2">Paso 1 — Tomar el primer vector</h4>
+                \[u_1=v_1\]
+                <p class="text-sm text-slate-600 mt-1">El primer vector se toma sin modificación. Será la primera dirección.</p>
+                <p class="text-sm mt-2 bg-green-100 rounded p-2">Ejemplo: \(v_1=(2,1)\Rightarrow u_1=(2,1)\)</p>
+            </div>
+            <div id="gs-step-2" class="gs-step hidden bg-blue-50 border-2 border-blue-400 rounded-xl p-5">
+                <h4 class="font-bold text-blue-800 mb-2">Paso 2 — Quitar la componente en dirección de \(u_1\)</h4>
+                \[u_2=v_2-\operatorname{proy}(v_2,u_1)=v_2-\frac{v_2\cdot u_1}{u_1\cdot u_1}\,u_1\]
+                <p class="text-sm text-slate-600 mt-1">Le restamos a \(v_2\) su "sombra" sobre \(u_1\). El resultado es perpendicular a \(u_1\).</p>
+                <p class="text-sm mt-2 bg-blue-100 rounded p-2">Ejemplo: \(\operatorname{proy}=\tfrac{4}{5}(2,1)\), \(u_2=(1,2)-(\tfrac{8}{5},\tfrac{4}{5})=(-\tfrac{3}{5},\tfrac{6}{5})\)</p>
+            </div>
+            <div id="gs-step-3" class="gs-step hidden bg-purple-50 border-2 border-purple-400 rounded-xl p-5">
+                <h4 class="font-bold text-purple-800 mb-2">Paso 3 — Caso general (más vectores)</h4>
+                \[u_k=v_k-\sum_{j=1}^{k-1}\operatorname{proy}(v_k,u_j)\]
+                <p class="text-sm text-slate-600 mt-1">Restamos las proyecciones sobre todos los anteriores. Garantiza que \(u_k\perp u_j\) para todo \(j\lt k\).</p>
+            </div>
+            <div id="gs-step-4" class="gs-step hidden bg-orange-50 border-2 border-orange-400 rounded-xl p-5">
+                <h4 class="font-bold text-orange-800 mb-2">Paso 4 — Normalizar</h4>
+                \[q_i=\frac{u_i}{\|u_i\|}\]
+                <p class="text-sm text-slate-600 mt-1">Dividimos entre la norma para obtener vectores unitarios.</p>
+                <p class="text-sm mt-2 bg-orange-100 rounded p-2">\(q_1=\bigl(\tfrac{2}{\sqrt5},\tfrac{1}{\sqrt5}\bigr)\), \(q_2=\bigl(-\tfrac{1}{\sqrt5},\tfrac{2}{\sqrt5}\bigr)\)</p>
+                <div class="mt-3 bg-green-100 border border-green-300 rounded-lg p-3 text-green-800 text-sm font-semibold">🎉 ¡Base ortonormal! \(q_1\cdot q_2=0\) ✓ y \(\|q_1\|=\|q_2\|=1\) ✓</div>
+            </div>
+
+            <div class="flex gap-3 mt-2">
+                <button onclick="pasoAnteriorGS()" class="bg-slate-500 text-white font-bold py-2 px-5 rounded-lg hover:bg-slate-600 transition-colors text-sm">◀ Anterior</button>
+                <button onclick="pasoSiguienteGS()" class="bg-green-600 text-white font-bold py-2 px-5 rounded-lg hover:bg-green-700 transition-colors text-sm">Siguiente ▶</button>
+            </div>
+        </div>
+
+        <!-- GS: SIMULADOR -->
+        <div id="gs-simulador" class="sub-gs hidden">
+            <div class="bg-green-50 rounded-xl p-5 border border-green-200">
+                <h4 class="font-bold text-green-800 mb-3">⚙️ Simulador Gram-Schmidt en \(\mathbb{R}^2\)</h4>
+                <p class="text-sm text-slate-600 mb-4">Ingresa dos vectores L.I. y obtén la base ortonormal resultante:</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                    <div class="bg-white rounded-lg p-4 border border-green-200">
+                        <p class="font-semibold text-green-700 mb-2">Vector \(v_1\)</p>
+                        <div class="flex items-center gap-1 flex-wrap text-sm">
+                            <span>\(v_1=(\)</span>
+                            <input type="number" id="gs-v1x" value="2" class="w-14 border rounded px-1 py-1 text-center font-mono" step="0.5">
+                            <span>,</span>
+                            <input type="number" id="gs-v1y" value="1" class="w-14 border rounded px-1 py-1 text-center font-mono" step="0.5">
+                            <span>\()\)</span>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg p-4 border border-blue-200">
+                        <p class="font-semibold text-blue-700 mb-2">Vector \(v_2\)</p>
+                        <div class="flex items-center gap-1 flex-wrap text-sm">
+                            <span>\(v_2=(\)</span>
+                            <input type="number" id="gs-v2x" value="1" class="w-14 border rounded px-1 py-1 text-center font-mono" step="0.5">
+                            <span>,</span>
+                            <input type="number" id="gs-v2y" value="2" class="w-14 border rounded px-1 py-1 text-center font-mono" step="0.5">
+                            <span>\()\)</span>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="simularGramSchmidt()" class="bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-700 transition-colors mb-4">🔧 Aplicar Gram-Schmidt</button>
+                <div id="gs-resultado" class="hidden bg-white rounded-lg p-4 border border-green-300 text-sm space-y-1 mb-4"></div>
+                <canvas id="gs-canvas" width="420" height="320" class="w-full rounded-lg border border-green-300 bg-white" style="max-width:420px;display:block;margin:0 auto;"></canvas>
+                <p class="text-xs text-slate-400 text-center mt-2">🟤 \(v_1,v_2\) originales &nbsp; 🟢 \(q_1\) &nbsp; 🔵 \(q_2\) ortonormales</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- TAB 5: PROYECCIÓN ORTOGONAL               -->
+    <!-- ══════════════════════════════════════════ -->
+    <div id="tab-py" class="main-tab-content hidden bg-white border-2 border-green-300 border-t-0 rounded-b-xl p-5">
+        <div class="flex gap-2 mb-5 border-b border-green-200 flex-wrap">
+            <button onclick="showSub('py','teoria')" id="py-tab-teoria"
+                class="sub-tab-py px-4 py-2 rounded-t-lg text-sm font-semibold border-b-2 border-green-600 text-green-700 bg-green-50">📖 Teoría</button>
+            <button onclick="showSub('py','simulador')" id="py-tab-simulador"
+                class="sub-tab-py px-4 py-2 rounded-t-lg text-sm font-semibold border-b-2 border-transparent text-slate-500 hover:text-green-700">⚙️ Simulador</button>
+        </div>
+
+        <!-- PY: TEORÍA -->
+        <div id="py-teoria" class="sub-py space-y-5 text-slate-700">
+            <div class="bg-blue-50 border-l-4 border-blue-400 rounded-r-xl p-5">
+                <h4 class="font-bold text-blue-800 mb-2">☀️ Analogía: la sombra</h4>
+                <p class="text-sm">La proyección ortogonal es la <strong>"sombra"</strong> de \(\mathbf{v}\) sobre \(W\): el punto más cercano de \(W\) a \(\mathbf{v}\), trazando una línea perpendicular.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="bg-green-50 border-l-4 border-green-500 rounded-r-xl p-5">
+                    <p class="font-bold text-green-900 mb-2">Proyección sobre un vector \(\mathbf{u}\):</p>
+                    \[\operatorname{proy}_{\mathbf{u}}(\mathbf{v})=\frac{\mathbf{v}\cdot\mathbf{u}}{\mathbf{u}\cdot\mathbf{u}}\;\mathbf{u}\]
+                    <p class="text-xs text-slate-500 mt-2">Si \(\|\mathbf{u}\|=1\): \(\operatorname{proy}=(\mathbf{v}\cdot\mathbf{u})\,\mathbf{u}\)</p>
+                </div>
+                <div class="bg-purple-50 border-l-4 border-purple-500 rounded-r-xl p-5">
+                    <p class="font-bold text-purple-900 mb-2">Proyección sobre subespacio \(W\) (base ON \(\{q_i\}\)):</p>
+                    \[\operatorname{proy}_W(\mathbf{v})=\sum_{i=1}^{k}(\mathbf{v}\cdot q_i)\,q_i\]
+                </div>
+            </div>
+            <div class="bg-orange-50 border-l-4 border-orange-400 rounded-r-xl p-5">
+                <h4 class="font-bold text-orange-800 mb-2">🔑 Descomposición ortogonal</h4>
+                <p class="text-sm mb-2">Todo vector \(\mathbf{v}\) se descompone en dos partes perpendiculares:</p>
+                \[\mathbf{v}=\underbrace{\operatorname{proy}_{\mathbf{u}}(\mathbf{v})}_{\parallel\;\mathbf{u}}+\underbrace{(\mathbf{v}-\operatorname{proy}_{\mathbf{u}}(\mathbf{v}))}_{\perp\;\mathbf{u}}\]
+            </div>
+            <div class="space-y-4">
+                <div class="bg-blue-50 border-l-4 border-blue-500 rounded-r-lg p-4">
+                    <h4 class="font-bold text-blue-800 mb-2">📌 Ejemplo — Proyección sobre el eje \(x\)</h4>
+                    <p class="text-sm mb-1">Sea \(\mathbf{v}=(4,3)\), \(\mathbf{u}=(1,0)\):</p>
+                    \[\operatorname{proy}_{\mathbf{u}}(\mathbf{v})=\frac{(4,3)\cdot(1,0)}{1}(1,0)=(4,0)\]
+                    <p class="text-sm mt-1">Componente perpendicular: \(\mathbf{v}-\operatorname{proy}=(0,3)\)</p>
+                    <div class="mt-2 bg-blue-100 rounded p-2 text-blue-800 text-sm">✅ La proyección de \((4,3)\) sobre el eje \(x\) es \((4,0)\).</div>
+                </div>
+            </div>
+            <div class="bg-gradient-to-r from-red-50 to-orange-50 rounded-xl p-5 border-l-4 border-red-400">
+                <h4 class="font-bold text-red-700 mb-2">💻 Aplicación — Mínimos cuadrados y ML</h4>
+                <p class="text-sm mb-1">El método de <strong>mínimos cuadrados</strong> minimiza \(\|\mathbf{b}-A\mathbf{x}\|^2\). La solución \(\hat{\mathbf{x}}\) satisface:</p>
+                \[A^TA\,\hat{\mathbf{x}}=A^T\mathbf{b}\]
+                <p class="text-sm mt-1">Y \(A\hat{\mathbf{x}}\) es la <strong>proyección ortogonal de \(\mathbf{b}\) sobre \(\operatorname{Col}(A)\)</strong>. Esto es la base de la regresión lineal.</p>
+            </div>
+        </div>
+
+        <!-- PY: SIMULADOR -->
+        <div id="py-simulador" class="sub-py hidden">
+            <div class="bg-green-50 rounded-xl p-5 border border-green-200">
+                <h4 class="font-bold text-green-800 mb-3">⚙️ Simulador de Proyección Ortogonal en \(\mathbb{R}^2\)</h4>
+                <p class="text-sm text-slate-600 mb-4">Ingresa \(\mathbf{v}\) y la dirección \(\mathbf{u}\). El simulador mostrará la proyección y la componente perpendicular:</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                    <div class="bg-white rounded-lg p-4 border border-red-200">
+                        <p class="font-semibold text-red-700 mb-2">Vector \(\mathbf{v}\) (a proyectar)</p>
+                        <div class="flex items-center gap-1 flex-wrap text-sm">
+                            <span>\(\mathbf{v}=(\)</span>
+                            <input type="number" id="py-vx" value="4" class="w-14 border rounded px-1 py-1 text-center font-mono" step="0.5">
+                            <span>,</span>
+                            <input type="number" id="py-vy" value="3" class="w-14 border rounded px-1 py-1 text-center font-mono" step="0.5">
+                            <span>\()\)</span>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg p-4 border border-green-200">
+                        <p class="font-semibold text-green-700 mb-2">Dirección \(\mathbf{u}\)</p>
+                        <div class="flex items-center gap-1 flex-wrap text-sm">
+                            <span>\(\mathbf{u}=(\)</span>
+                            <input type="number" id="py-ux" value="2" class="w-14 border rounded px-1 py-1 text-center font-mono" step="0.5">
+                            <span>,</span>
+                            <input type="number" id="py-uy" value="1" class="w-14 border rounded px-1 py-1 text-center font-mono" step="0.5">
+                            <span>\()\)</span>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="simularProyeccion()" class="bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-700 transition-colors mb-4">💡 Proyectar</button>
+                <div id="py-resultado" class="hidden bg-white rounded-lg p-4 border border-green-300 text-sm space-y-1 mb-4"></div>
+                <canvas id="py-canvas" width="420" height="320" class="w-full rounded-lg border border-green-300 bg-white" style="max-width:420px;display:block;margin:0 auto;"></canvas>
+                <p class="text-xs text-slate-400 text-center mt-2">🔴 \(\mathbf{v}\) &nbsp; 🟢 \(\mathbf{u}\) &nbsp; 🔵 proyección &nbsp; ⚫ componente \(\perp\)</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── ESTILOS FLIP CARDS ── -->
+<style>
+.flip-card{perspective:1000px}
+.flip-inner{position:relative;width:100%;height:100%;transition:transform .6s;transform-style:preserve-3d}
+.flip-card.flipped .flip-inner{transform:rotateY(180deg)}
+.flip-front,.flip-back{position:absolute;width:100%;height:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.flip-back{transform:rotateY(180deg)}
+</style>
+
+<!-- ── SCRIPTS ── -->
+<script>
+// ── PESTAÑAS PRINCIPALES ──
+function showMainTab(id){
+    document.querySelectorAll('.main-tab-content').forEach(el=>el.classList.add('hidden'));
+    document.querySelectorAll('.main-tab-btn').forEach(btn=>{
+        btn.classList.remove('bg-green-600','text-white','border-green-400');
+        btn.classList.add('bg-white','text-slate-500','border-green-200');
+    });
+    document.getElementById(id).classList.remove('hidden');
+    const btn=document.getElementById('main-tab-'+id.replace('tab-',''));
+    btn.classList.add('bg-green-600','text-white','border-green-400');
+    btn.classList.remove('bg-white','text-slate-500','border-green-200');
+    if(window.MathJax)MathJax.typesetPromise();
+}
+
+// ── SUB-PESTAÑAS ──
+function showSub(prefix,tab){
+    document.querySelectorAll(`.sub-${prefix}`).forEach(el=>el.classList.add('hidden'));
+    document.querySelectorAll(`.sub-tab-${prefix}`).forEach(btn=>{
+        btn.classList.remove('border-green-600','text-green-700','bg-green-50');
+        btn.classList.add('border-transparent','text-slate-500');
+    });
+    document.getElementById(`${prefix}-${tab}`).classList.remove('hidden');
+    const ab=document.getElementById(`${prefix}-tab-${tab}`);
+    ab.classList.add('border-green-600','text-green-700','bg-green-50');
+    ab.classList.remove('border-transparent','text-slate-500');
+    if(window.MathJax)MathJax.typesetPromise();
+}
+
+// ── CANVAS UTILS ──
+function drawGrid(ctx,w,h,ox,oy,sc){
+    ctx.strokeStyle='#e2e8f0';ctx.lineWidth=1;
+    for(let x=ox%sc;x<w;x+=sc){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke();}
+    for(let y=oy%sc;y<h;y+=sc){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}
+    ctx.strokeStyle='#94a3b8';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(0,oy);ctx.lineTo(w,oy);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(ox,0);ctx.lineTo(ox,h);ctx.stroke();
+    ctx.fillStyle='#94a3b8';ctx.font='11px Poppins,sans-serif';
+    ctx.fillText('x',w-12,oy-5);ctx.fillText('y',ox+5,12);
+}
+function drawArrow(ctx,ox,oy,vx,vy,sc,color,label){
+    const ex=ox+vx*sc,ey=oy-vy*sc;
+    const angle=Math.atan2(oy-ey,ex-ox);
+    ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(ex,ey);
+    ctx.strokeStyle=color;ctx.lineWidth=2.5;ctx.stroke();
+    const hs=10;
+    ctx.beginPath();
+    ctx.moveTo(ex,ey);
+    ctx.lineTo(ex-hs*Math.cos(angle-.4),ey-hs*Math.sin(angle-.4));
+    ctx.lineTo(ex-hs*Math.cos(angle+.4),ey-hs*Math.sin(angle+.4));
+    ctx.closePath();ctx.fillStyle=color;ctx.fill();
+    if(label){ctx.fillStyle=color;ctx.font='bold 13px Poppins,sans-serif';ctx.fillText(label,ex+6,ey-6);}
+}
+
+// ── SIMULADOR CAMBIO DE BASE ──
+function calcularCambioBase(){
+    const b1x=+document.getElementById('cb-b1x').value,b1y=+document.getElementById('cb-b1y').value;
+    const b2x=+document.getElementById('cb-b2x').value,b2y=+document.getElementById('cb-b2y').value;
+    const c1=+document.getElementById('cb-c1').value,c2=+document.getElementById('cb-c2').value;
+    const det=b1x*b2y-b2x*b1y;
+    if(Math.abs(det)<1e-10){alert('⚠️ Los vectores son L.D. No forman base.');return;}
+    const wx=c1*b1x+c2*b2x,wy=c1*b1y+c2*b2y;
+    const r=document.getElementById('cb-resultado');
+    r.innerHTML=`[w]_E = ${c1}·(${b1x},${b1y}) + ${c2}·(${b2x},${b2y}) = <strong>(${wx.toFixed(3)}, ${wy.toFixed(3)})</strong>`;
+    r.classList.remove('hidden');
+    const cv=document.getElementById('cb-canvas'),ctx=cv.getContext('2d');
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const ox=cv.width/2,oy=cv.height/2,sc=30;
+    drawGrid(ctx,cv.width,cv.height,ox,oy,sc);
+    drawArrow(ctx,ox,oy,b1x,b1y,sc,'#16a34a','b₁');
+    drawArrow(ctx,ox,oy,b2x,b2y,sc,'#2563eb','b₂');
+    drawArrow(ctx,ox,oy,c1*b1x,c1*b1y,sc,'rgba(22,163,74,0.35)','');
+    drawArrow(ctx,ox,oy,c2*b2x,c2*b2y,sc,'rgba(37,99,235,0.35)','');
+    drawArrow(ctx,ox,oy,wx,wy,sc,'#dc2626','w');
+}
+
+// ── SIMULADOR PRODUCTO ESCALAR ──
+function calcularProducto(){
+    const u1=+document.getElementById('pe-u1').value,u2=+document.getElementById('pe-u2').value;
+    const v1=+document.getElementById('pe-v1').value,v2=+document.getElementById('pe-v2').value;
+    const dot=u1*v1+u2*v2;
+    const nu=Math.sqrt(u1**2+u2**2),nv=Math.sqrt(v1**2+v2**2);
+    const cosA=(nu>0&&nv>0)?dot/(nu*nv):0;
+    const ang=Math.acos(Math.max(-1,Math.min(1,cosA)))*180/Math.PI;
+    const ortog=Math.abs(dot)<1e-10;
+    document.getElementById('pe-dot').innerHTML=`<strong>u · v</strong> = ${dot.toFixed(4)}`;
+    document.getElementById('pe-normu').innerHTML=`<strong>||u||</strong> = ${nu.toFixed(4)}`;
+    document.getElementById('pe-normv').innerHTML=`<strong>||v||</strong> = ${nv.toFixed(4)}`;
+    document.getElementById('pe-angulo').innerHTML=`<strong>Ángulo θ</strong> = ${ang.toFixed(2)}°`;
+    document.getElementById('pe-ortog').innerHTML=ortog
+        ?'<span class="text-green-700">✅ ORTOGONALES (u·v = 0)</span>'
+        :`<span class="text-red-600">❌ NO ortogonales (u·v = ${dot.toFixed(4)})</span>`;
+    document.getElementById('pe-resultado').classList.remove('hidden');
+    const cv=document.getElementById('pe-canvas'),ctx=cv.getContext('2d');
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const ox=cv.width/2,oy=cv.height/2,sc=35;
+    drawGrid(ctx,cv.width,cv.height,ox,oy,sc);
+    drawArrow(ctx,ox,oy,u1,u2,sc,'#16a34a','u');
+    drawArrow(ctx,ox,oy,v1,v2,sc,'#2563eb','v');
+    if(nu>0&&nv>0){
+        const a1=Math.atan2(-u2,u1),a2=Math.atan2(-v2,v1);
+        ctx.beginPath();ctx.arc(ox,oy,28,Math.min(a1,a2),Math.max(a1,a2));
+        ctx.strokeStyle='#eab308';ctx.lineWidth=2;ctx.stroke();
+        ctx.fillStyle='#eab308';ctx.font='11px Poppins';
+        ctx.fillText(`${ang.toFixed(1)}°`,ox+32,oy-18);
+    }
+}
+
+// ── VERIFICADOR ORTONORMAL ──
+function verificarOrtonormal(){
+    const q1x=+document.getElementById('on-q1x').value,q1y=+document.getElementById('on-q1y').value;
+    const q2x=+document.getElementById('on-q2x').value,q2y=+document.getElementById('on-q2y').value;
+    const dot=q1x*q2x+q1y*q2y;
+    const n1=Math.sqrt(q1x**2+q1y**2),n2=Math.sqrt(q2x**2+q2y**2);
+    const isOrtog=Math.abs(dot)<1e-3,isU1=Math.abs(n1-1)<1e-3,isU2=Math.abs(n2-1)<1e-3;
+    const isON=isOrtog&&isU1&&isU2;
+    const res=document.getElementById('on-resultado');
+    res.innerHTML=`
+        <p class="${isU1?'text-green-700':'text-red-600'}">${isU1?'✅':'❌'} ||q₁|| = ${n1.toFixed(4)} ${isU1?'≈ 1 ✓':'≠ 1'}</p>
+        <p class="${isU2?'text-green-700':'text-red-600'}">${isU2?'✅':'❌'} ||q₂|| = ${n2.toFixed(4)} ${isU2?'≈ 1 ✓':'≠ 1'}</p>
+        <p class="${isOrtog?'text-green-700':'text-red-600'}">${isOrtog?'✅':'❌'} q₁·q₂ = ${dot.toFixed(4)} ${isOrtog?'≈ 0 ✓':'≠ 0'}</p>
+        <p class="font-bold text-lg mt-2 ${isON?'text-green-700':'text-red-600'}">
+            ${isON?'🎉 {q₁,q₂} ES base ortonormal':'❌ {q₁,q₂} NO es base ortonormal'}
+        </p>`;
+    res.classList.remove('hidden');
+}
+
+// ── PASOS GRAM-SCHMIDT ──
+let gsStep=1;
+function mostrarPasoGS(s){
+    gsStep=s;
+    for(let i=1;i<=4;i++){
+        document.getElementById(`gs-step-${i}`).classList.toggle('hidden',i!==s);
+        const d=document.getElementById(`gs-prog-${i}`);
+        d.classList.toggle('bg-green-600',i===s);
+        d.classList.toggle('bg-slate-300',i!==s);
+    }
+    if(window.MathJax)MathJax.typesetPromise();
+}
+function pasoSiguienteGS(){if(gsStep<4)mostrarPasoGS(gsStep+1);}
+function pasoAnteriorGS(){if(gsStep>1)mostrarPasoGS(gsStep-1);}
+
+// ── SIMULADOR GRAM-SCHMIDT ──
+function simularGramSchmidt(){
+    const v1x=+document.getElementById('gs-v1x').value,v1y=+document.getElementById('gs-v1y').value;
+    const v2x=+document.getElementById('gs-v2x').value,v2y=+document.getElementById('gs-v2y').value;
+    const d12=v1x*v2x+v1y*v2y,n1sq=v1x**2+v1y**2;
+    if(n1sq<1e-10){alert('⚠️ v₁ es el vector cero.');return;}
+    const ps=d12/n1sq;
+    const u2x=v2x-ps*v1x,u2y=v2y-ps*v1y;
+    const n1=Math.sqrt(n1sq),n2=Math.sqrt(u2x**2+u2y**2);
+    if(n2<1e-10){alert('⚠️ Vectores L.D. No se puede aplicar Gram-Schmidt.');return;}
+    const q1x=v1x/n1,q1y=v1y/n1,q2x=u2x/n2,q2y=u2y/n2;
+    const res=document.getElementById('gs-resultado');
+    res.innerHTML=`
+        <p><strong>u₁</strong> = (${v1x}, ${v1y})</p>
+        <p><strong>proy(v₂,u₁)</strong> = (${(ps*v1x).toFixed(3)}, ${(ps*v1y).toFixed(3)})</p>
+        <p><strong>u₂</strong> = (${u2x.toFixed(3)}, ${u2y.toFixed(3)})</p>
+        <hr class="my-2">
+        <p class="text-green-700 font-semibold"><strong>q₁</strong> = (${q1x.toFixed(4)}, ${q1y.toFixed(4)})</p>
+        <p class="text-blue-700 font-semibold"><strong>q₂</strong> = (${q2x.toFixed(4)}, ${q2y.toFixed(4)})</p>
+        <p class="text-xs text-slate-400 mt-1">Verificación: q₁·q₂ = ${(q1x*q2x+q1y*q2y).toFixed(6)} ≈ 0 ✓</p>`;
+    res.classList.remove('hidden');
+    const cv=document.getElementById('gs-canvas'),ctx=cv.getContext('2d');
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const ox=cv.width/2,oy=cv.height/2,sc=40;
+    drawGrid(ctx,cv.width,cv.height,ox,oy,sc);
+    drawArrow(ctx,ox,oy,v1x,v1y,sc,'#92400e','v₁');
+    drawArrow(ctx,ox,oy,v2x,v2y,sc,'#78350f','v₂');
+    drawArrow(ctx,ox,oy,q1x*2,q1y*2,sc,'#16a34a','q₁');
+    drawArrow(ctx,ox,oy,q2x*2,q2y*2,sc,'#2563eb','q₂');
+}
+
+// ── SIMULADOR PROYECCIÓN ──
+function simularProyeccion(){
+    const vx=+document.getElementById('py-vx').value,vy=+document.getElementById('py-vy').value;
+    const ux=+document.getElementById('py-ux').value,uy=+document.getElementById('py-uy').value;
+    const uuDot=ux**2+uy**2;
+    if(uuDot<1e-10){alert('⚠️ u es el vector cero.');return;}
+    const sc2=(vx*ux+vy*uy)/uuDot;
+    const px=sc2*ux,py=sc2*uy,perpx=vx-px,perpy=vy-py;
+    const res=document.getElementById('py-resultado');
+    res.innerHTML=`
+        <p><strong>v·u</strong> = ${(vx*ux+vy*uy).toFixed(4)} &nbsp;|&nbsp; <strong>u·u</strong> = ${uuDot.toFixed(4)} &nbsp;|&nbsp; <strong>escalar</strong> = ${sc2.toFixed(4)}</p>
+        <p class="text-blue-700 font-semibold"><strong>proy_u(v)</strong> = (${px.toFixed(4)}, ${py.toFixed(4)})</p>
+        <p class="text-slate-700 font-semibold"><strong>Componente ⊥</strong> = (${perpx.toFixed(4)}, ${perpy.toFixed(4)})</p>
+        <p class="text-xs text-slate-400">Verificación: proy·perp = ${(px*perpx+py*perpy).toFixed(6)} ≈ 0 ✓</p>`;
+    res.classList.remove('hidden');
+    const cv=document.getElementById('py-canvas'),ctx=cv.getContext('2d');
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const ox=cv.width/2,oy=cv.height/2,scale=35;
+    drawGrid(ctx,cv.width,cv.height,ox,oy,scale);
+    const len=Math.sqrt(uuDot),udx=ux/len,udy=uy/len;
+    ctx.beginPath();ctx.setLineDash([5,4]);
+    ctx.moveTo(ox-udx*200,oy+udy*200);ctx.lineTo(ox+udx*200,oy-udy*200);
+    ctx.strokeStyle='#bbf7d0';ctx.lineWidth=1.5;ctx.stroke();ctx.setLineDash([]);
+    ctx.beginPath();ctx.setLineDash([4,4]);
+    ctx.moveTo(ox+vx*scale,oy-vy*scale);ctx.lineTo(ox+px*scale,oy-py*scale);
+    ctx.strokeStyle='#94a3b8';ctx.lineWidth=1.5;ctx.stroke();ctx.setLineDash([]);
+    const s=8,dx=-udy,dy=-udx;
+    ctx.beginPath();
+    ctx.moveTo(ox+px*scale+dx*s,oy-py*scale+dy*s);
+    ctx.lineTo(ox+px*scale+dx*s+udx*s,oy-py*scale+dy*s-udy*s);
+    ctx.lineTo(ox+px*scale+udx*s,oy-py*scale-udy*s);
+    ctx.strokeStyle='#64748b';ctx.lineWidth=1.5;ctx.stroke();
+    drawArrow(ctx,ox,oy,ux,uy,scale,'#16a34a','u');
+    drawArrow(ctx,ox,oy,vx,vy,scale,'#dc2626','v');
+    drawArrow(ctx,ox,oy,px,py,scale,'#2563eb','proy');
+    drawArrow(ctx,ox+px*scale,oy-py*scale,perpx,perpy,scale,'#1e293b','⊥');
+}
+</script>
+
+       <!-- ══════════════ ACTIVIDADES ══════════════ -->
+        <div id="actividades" class="content-pane">
+            <h2 class="text-2xl sm:text-3xl font-bold text-green-800 mb-6">Actividades prácticas</h2>
+
+            <!-- Actividad 1: Emparejamiento -->
+            <div class="bg-white border-l-4 border-green-500 rounded-lg shadow-sm p-6 mb-8">
+                <h3 class="text-xl font-bold text-green-700 mb-2">Actividad 1. Empareja cada concepto con su descripción</h3>
+                <p class="text-slate-600 mb-6">Haz clic en un concepto y luego en su descripción correcta.</p>
+                <div class="flex flex-col lg:flex-row gap-8 mb-4">
+                    <div class="flex-1">
+                        <h4 class="font-bold text-green-800 mb-4 text-center">Conceptos</h4>
+                        <div id="concepts-container" class="space-y-3">
+                            <div class="concept-item bg-gradient-to-r from-green-100 to-green-200 p-4 rounded-lg shadow-md cursor-pointer hover:shadow-lg transition-all border-2 border-transparent" data-concept="cambiobase"><div class="flex items-center justify-between"><span class="font-bold text-green-800">🔄 Cambio de Base</span><span class="hint-text text-xs bg-green-300 px-2 py-1 rounded">Clic</span></div></div>
+                            <div class="concept-item bg-gradient-to-r from-green-100 to-green-200 p-4 rounded-lg shadow-md cursor-pointer hover:shadow-lg transition-all border-2 border-transparent" data-concept="ortonormal"><div class="flex items-center justify-between"><span class="font-bold text-green-800">⭐ Base Ortonormal</span><span class="hint-text text-xs bg-green-300 px-2 py-1 rounded">Clic</span></div></div>
+                            <div class="concept-item bg-gradient-to-r from-green-100 to-green-200 p-4 rounded-lg shadow-md cursor-pointer hover:shadow-lg transition-all border-2 border-transparent" data-concept="gramschmidt"><div class="flex items-center justify-between"><span class="font-bold text-green-800">🔧 Gram-Schmidt</span><span class="hint-text text-xs bg-green-300 px-2 py-1 rounded">Clic</span></div></div>
+                            <div class="concept-item bg-gradient-to-r from-green-100 to-green-200 p-4 rounded-lg shadow-md cursor-pointer hover:shadow-lg transition-all border-2 border-transparent" data-concept="proyeccion"><div class="flex items-center justify-between"><span class="font-bold text-green-800">💡 Proyección Ortogonal</span><span class="hint-text text-xs bg-green-300 px-2 py-1 rounded">Clic</span></div></div>
+                            <div class="concept-item bg-gradient-to-r from-green-100 to-green-200 p-4 rounded-lg shadow-md cursor-pointer hover:shadow-lg transition-all border-2 border-transparent" data-concept="norma"><div class="flex items-center justify-between"><span class="font-bold text-green-800">📏 Norma \(\|\mathbf{v}\|\)</span><span class="hint-text text-xs bg-green-300 px-2 py-1 rounded">Clic</span></div></div>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-bold text-green-800 mb-4 text-center">Descripciones</h4>
+                        <div id="definitions-container" class="space-y-3">
+                            <div class="definition-item bg-gray-50 p-4 rounded-lg shadow-md border-2 border-dashed border-gray-300 cursor-pointer hover:bg-gray-100 transition-all min-h-[64px] flex items-center" data-definition="ortonormal"><div class="w-full"><p class="text-slate-700 text-sm">Base donde \(q_i \cdot q_j = \delta_{ij}\). Cumple \(Q^TQ = I\) y sus coordenadas se calculan como \(c_i = \mathbf{w}\cdot q_i\).</p><div class="matched-concept mt-1 hidden text-green-700 font-semibold text-sm"></div></div></div>
+                            <div class="definition-item bg-gray-50 p-4 rounded-lg shadow-md border-2 border-dashed border-gray-300 cursor-pointer hover:bg-gray-100 transition-all min-h-[64px] flex items-center" data-definition="cambiobase"><div class="w-full"><p class="text-slate-700 text-sm">Proceso de expresar las coordenadas de un vector en una base diferente: \([\mathbf{w}]_E = P\cdot[\mathbf{w}]_B\), donde las columnas de \(P\) son los vectores de la base.</p><div class="matched-concept mt-1 hidden text-green-700 font-semibold text-sm"></div></div></div>
+                            <div class="definition-item bg-gray-50 p-4 rounded-lg shadow-md border-2 border-dashed border-gray-300 cursor-pointer hover:bg-gray-100 transition-all min-h-[64px] flex items-center" data-definition="proyeccion"><div class="w-full"><p class="text-slate-700 text-sm">El punto más cercano en \(W\) a un vector \(\mathbf{v}\). Fórmula: \(\text{proy}_u(\mathbf{v}) = \frac{\mathbf{v}\cdot\mathbf{u}}{\mathbf{u}\cdot\mathbf{u}}\,\mathbf{u}\).</p><div class="matched-concept mt-1 hidden text-green-700 font-semibold text-sm"></div></div></div>
+                            <div class="definition-item bg-gray-50 p-4 rounded-lg shadow-md border-2 border-dashed border-gray-300 cursor-pointer hover:bg-gray-100 transition-all min-h-[64px] flex items-center" data-definition="norma"><div class="w-full"><p class="text-slate-700 text-sm">Longitud de un vector: \(\|\mathbf{v}\| = \sqrt{v_1^2+v_2^2+\cdots+v_n^2}\). Un vector con norma 1 se llama unitario.</p><div class="matched-concept mt-1 hidden text-green-700 font-semibold text-sm"></div></div></div>
+                            <div class="definition-item bg-gray-50 p-4 rounded-lg shadow-md border-2 border-dashed border-gray-300 cursor-pointer hover:bg-gray-100 transition-all min-h-[64px] flex items-center" data-definition="gramschmidt"><div class="w-full"><p class="text-slate-700 text-sm">Algoritmo que convierte cualquier base en una base ortonormal restando proyecciones (\(u_2 = v_2 - \text{proy}(v_2,u_1)\)) y normalizando (\(q_i = u_i/\|u_i\|\)).</p><div class="matched-concept mt-1 hidden text-green-700 font-semibold text-sm"></div></div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-3 bg-green-50 border border-green-200 rounded-lg mb-4"><p class="text-sm text-green-800"><strong>💡</strong> Haz clic en un concepto y luego en su descripción.</p></div>
+                <div class="flex gap-4">
+                    <button id="check-matching-btn" class="bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-700 transition-colors">Verificar</button>
+                    <button id="reset-matching-btn" class="bg-gray-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-600 transition-colors">Reiniciar</button>
+                </div>
+                <div id="matching-result" class="mt-4 font-medium"></div>
+            </div>
+
+            <!-- Actividad 2: V o F -->
+            <div class="bg-white border-l-4 border-green-500 rounded-lg shadow-sm p-6 mb-8">
+                <h3 class="text-xl font-bold text-green-700 mb-2">Actividad 2. Verdadero (V) o Falso (F)</h3>
+                <p class="text-slate-600 mb-6">Escribe <strong>V</strong> o <strong>F</strong> en cada casilla:</p>
+                <div class="space-y-4">
+                    <div class="flex items-start gap-4 p-3 bg-green-50 rounded-lg border border-green-200"><input type="text" id="vf1" maxlength="1" placeholder="?" class="vf-input w-12 h-12 text-center border-2 border-green-300 rounded-lg font-bold text-lg bg-white uppercase flex-shrink-0"><p class="text-slate-700 pt-2">Al cambiar de base, el vector geométrico también cambia.</p></div>
+                    <div class="flex items-start gap-4 p-3 bg-green-50 rounded-lg border border-green-200"><input type="text" id="vf2" maxlength="1" placeholder="?" class="vf-input w-12 h-12 text-center border-2 border-green-300 rounded-lg font-bold text-lg bg-white uppercase flex-shrink-0"><p class="text-slate-700 pt-2">Si \(\mathbf{u}\cdot\mathbf{v} = 0\), entonces \(\mathbf{u}\) y \(\mathbf{v}\) son ortogonales.</p></div>
+                    <div class="flex items-start gap-4 p-3 bg-green-50 rounded-lg border border-green-200"><input type="text" id="vf3" maxlength="1" placeholder="?" class="vf-input w-12 h-12 text-center border-2 border-green-300 rounded-lg font-bold text-lg bg-white uppercase flex-shrink-0"><p class="text-slate-700 pt-2">Para una base ortonormal \(Q\), se cumple que \(Q^{-1} = Q^T\).</p></div>
+                    <div class="flex items-start gap-4 p-3 bg-green-50 rounded-lg border border-green-200"><input type="text" id="vf4" maxlength="1" placeholder="?" class="vf-input w-12 h-12 text-center border-2 border-green-300 rounded-lg font-bold text-lg bg-white uppercase flex-shrink-0"><p class="text-slate-700 pt-2">El proceso de Gram-Schmidt cambia el espacio generado por los vectores originales.</p></div>
+                    <div class="flex items-start gap-4 p-3 bg-green-50 rounded-lg border border-green-200"><input type="text" id="vf5" maxlength="1" placeholder="?" class="vf-input w-12 h-12 text-center border-2 border-green-300 rounded-lg font-bold text-lg bg-white uppercase flex-shrink-0"><p class="text-slate-700 pt-2">En una base ortonormal, las coordenadas de \(\mathbf{w}\) se calculan como \(c_i = \mathbf{w}\cdot q_i\) sin resolver ningún sistema.</p></div>
+                    <div class="flex items-start gap-4 p-3 bg-green-50 rounded-lg border border-green-200"><input type="text" id="vf6" maxlength="1" placeholder="?" class="vf-input w-12 h-12 text-center border-2 border-green-300 rounded-lg font-bold text-lg bg-white uppercase flex-shrink-0"><p class="text-slate-700 pt-2">El método de mínimos cuadrados es equivalente a proyectar \(\mathbf{b}\) sobre \(\text{Col}(A)\).</p></div>
+                    <div class="flex items-start gap-4 p-3 bg-green-50 rounded-lg border border-green-200"><input type="text" id="vf7" maxlength="1" placeholder="?" class="vf-input w-12 h-12 text-center border-2 border-green-300 rounded-lg font-bold text-lg bg-white uppercase flex-shrink-0"><p class="text-slate-700 pt-2">La matriz de cambio de base \(P\) se construye poniendo los vectores de la base como filas.</p></div>
+                </div>
+                <div class="flex gap-4 mt-6">
+                    <button id="check-vf-btn" class="bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-700 transition-colors">Verificar</button>
+                    <button id="reset-vf-btn" class="bg-gray-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-600 transition-colors">Reiniciar</button>
+                </div>
+                <div id="vf-result" class="mt-4 font-medium"></div>
+            </div>
+
+            <!-- Actividad 3: Calculadora -->
+            <div class="bg-white border-l-4 border-green-500 rounded-lg shadow-sm p-6 mb-8">
+                <h3 class="text-xl font-bold text-green-700 mb-2">Actividad 3. Calculadora de producto escalar y norma</h3>
+                <p class="text-slate-600 mb-5">Ingresa las componentes de dos vectores en \(\mathbb{R}^3\) y verifica si son ortogonales:</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-4">
+                    <div>
+                        <p class="font-semibold text-slate-700 mb-2">Vector \(\mathbf{u} = (u_1, u_2, u_3)\):</p>
+                        <div class="flex gap-2">
+                            <input type="number" id="u1" value="1" class="w-full p-2 border-2 border-green-300 rounded-lg font-mono text-center focus:border-green-500 focus:outline-none">
+                            <input type="number" id="u2" value="2" class="w-full p-2 border-2 border-green-300 rounded-lg font-mono text-center focus:border-green-500 focus:outline-none">
+                            <input type="number" id="u3" value="3" class="w-full p-2 border-2 border-green-300 rounded-lg font-mono text-center focus:border-green-500 focus:outline-none">
+                        </div>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-slate-700 mb-2">Vector \(\mathbf{v} = (v_1, v_2, v_3)\):</p>
+                        <div class="flex gap-2">
+                            <input type="number" id="v1" value="1" class="w-full p-2 border-2 border-green-300 rounded-lg font-mono text-center focus:border-green-500 focus:outline-none">
+                            <input type="number" id="v2" value="1" class="w-full p-2 border-2 border-green-300 rounded-lg font-mono text-center focus:border-green-500 focus:outline-none">
+                            <input type="number" id="v3" value="-1" class="w-full p-2 border-2 border-green-300 rounded-lg font-mono text-center focus:border-green-500 focus:outline-none">
+                        </div>
+                    </div>
+                </div>
+                <button id="calc-pe-btn" class="bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-700 transition-colors">Calcular</button>
+                <div id="pe-result" class="mt-4 hidden"></div>
+            </div>
+
+            <!-- Actividad 4 -->
+            <div class="bg-white border-l-4 border-green-500 rounded-lg shadow-sm p-6">
+                <h3 class="text-xl font-bold text-green-700 mb-2">Actividad 4. Preguntas de análisis</h3>
+                <p class="text-slate-600 mb-5">Desarrolle las siguientes preguntas de análisis y documente sus procedimientos y resultados.</p>
+                <div class="space-y-4">
+                    <div class="p-4 bg-green-50 rounded-lg border border-green-200"><p class="font-bold text-green-800 mb-1">1.</p><p class="text-slate-700">Proyecta \(\mathbf{v}=(5,2)\) sobre la recta generada por \(\mathbf{u}=(1,1)\). ¿Cuál es la componente perpendicular a \(\mathbf{u}\)?</p></div>
+                    <div class="p-4 bg-green-50 rounded-lg border border-green-200"><p class="font-bold text-green-800 mb-1">2.</p><p class="text-slate-700">Aplica Gram-Schmidt a \(\{(3,4),(1,0)\}\) en \(\mathbb{R}^2\). Verifica que \(q_1\cdot q_2 = 0\) y \(\|q_1\|=\|q_2\|=1\).</p></div>
+                    <div class="p-4 bg-green-50 rounded-lg border border-green-200"><p class="font-bold text-green-800 mb-1">3.</p><p class="text-slate-700">Sea \(W = \text{span}\{(1,0,1),(0,1,0)\} \subset \mathbb{R}^3\). Proyecta \(\mathbf{v}=(2,3,4)\) sobre \(W\). (Pista: primero aplica Gram-Schmidt a los generadores de \(W\).)</p></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════════ EVALUACIÓN ══════════════ -->
+        <div id="evaluacion" class="content-pane">
+            <h2 class="text-2xl sm:text-3xl font-bold text-green-800 mb-6">Evaluación. Selección múltiple (marca la respuesta correcta)</h2>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <p class="text-slate-600 mb-6">Comprueba lo que has aprendido. Selecciona la respuesta correcta para cada pregunta.</p>
+                <div id="quiz-container"></div>
+                <div class="flex gap-4 mt-6">
+                    <button id="submit-quiz-btn" class="bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-700 transition-colors">Finalizar evaluación</button>
+                    <button id="reset-quiz-btn" class="bg-gray-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-600 transition-colors hidden">🔄 Reiniciar evaluación</button>
+                </div>
+                <div id="quiz-result" class="mt-4 text-lg font-bold"></div>
+            </div>
+        </div>
+
+        <!-- ══════════════ RECURSOS ══════════════ -->
+        <div id="recursos" class="content-pane">
+            <h2 class="text-2xl sm:text-3xl font-bold text-green-800 mb-6">Recursos para profundizar</h2>
+            <p class="text-slate-700 leading-relaxed mb-6">Para ampliar tu conocimiento sobre los temas de esta guía:</p>
+            <ul class="space-y-4">
+                <li class="bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow border-l-4 border-green-500 flex flex-col sm:flex-row sm:items-center justify-between">
+                    <div>
+                        <h3 class="font-bold text-green-700 text-lg">Video Gram-Schmidt — 3Blue1Brown y Khan Academy</h3>
+                        <p class="text-sm text-slate-500 mb-2">Visualización animada del proceso de Gram-Schmidt y bases ortonormales</p>
+                        <a href="https://www.youtube.com/watch?v=zHbfZWZJTGc" target="_blank" class="underline text-slate-700 hover:text-green-700 text-sm">Ir al recurso</a>
+                    </div>
+                    <div class="mt-4 sm:mt-0 sm:ml-6 flex-shrink-0 flex flex-col items-center">
+                        <img src="img/Qr1.png" alt="QR Gram-Schmidt" class="w-16 h-16 object-contain border border-green-300 rounded" loading="lazy"
+                             onerror="this.style.display='none';this.parentElement.innerHTML='<span class=\'text-2xl\'>🎬</span>'">
+                        <span class="text-xs text-slate-400 mt-1">Escanea el QR</span>
+                    </div>
+                </li>
+                <li class="bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow border-l-4 border-green-500 flex flex-col sm:flex-row sm:items-center justify-between">
+                    <div>
+                        <h3 class="font-bold text-green-700 text-lg">Wolfram Alpha — Verificador de cálculos</h3>
+                        <p class="text-sm text-slate-500 mb-2">Verifica productos escalares, normas, proyecciones y el proceso de Gram-Schmidt paso a paso</p>
+                        <a href="https://www.wolframalpha.com" target="_blank" class="underline text-slate-700 hover:text-green-700 text-sm">Ir al recurso</a>
+                    </div>
+                    <div class="mt-4 sm:mt-0 sm:ml-6 flex-shrink-0 flex flex-col items-center">
+                        <img src="img/Qr2.png" alt="QR Wolfram Alpha" class="w-16 h-16 object-contain border border-green-300 rounded" loading="lazy"
+                             onerror="this.style.display='none';this.parentElement.innerHTML='<span class=\'text-2xl\'>🔢</span>'">
+                        <span class="text-xs text-slate-400 mt-1">Escanea el QR</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+<!-- ══════════════ BIBLIOGRAFÍA ══════════════ -->
+        <div id="bibliografia" class="content-pane">
+            <h2 class="text-2xl sm:text-3xl font-bold text-green-800 mb-6">Bibliografía</h2>
+            <div class="space-y-4">
+                <div class="bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow border-l-4 border-green-500"><span class="block text-slate-700">Grossman, S. I. (2012). <em>Álgebra lineal</em> (7.ª ed.). McGraw-Hill Interamericana.</span></div>
+                <div class="bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow border-l-4 border-green-500"><span class="block text-slate-700">Lay, D. C., Lay, S. R., y McDonald, J. J. (2016). <em>Álgebra lineal y sus aplicaciones</em> (5.ª ed.). Pearson Education.</span></div>
+                <div class="bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow border-l-4 border-green-500"><span class="block text-slate-700">Kolman, B., y Hill, D. (2006). <em>Álgebra lineal</em> (8.ª ed.). Pearson Educación.</span></div>
+                <div class="bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow border-l-4 border-green-500"><span class="block text-slate-700">Strang, G. (2016). <em>Introduction to linear algebra</em> (5.ª ed.). Wellesley-Cambridge Press.</span></div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<!-- Modal -->
+<div id="imageModal" class="image-modal">
+    <div class="modal-content">
+        <img id="modalImage" src="" alt="Imagen ampliada">
+        <button class="close-modal" id="closeModal">&times;</button>
+    </div>
+</div>
+
+<script src="js/speech.js"></script>
+<script src="js/modal.js"></script>
+<script src="js/activities.js"></script>
+<script src="js/quiz.js"></script>
+<script src="js/accordion.js"></script>
+<script src="js/navigation.js"></script>
+
+<!-- Footer en todas las secciones -->
+<script>
+    const footerHTML = `
+        <footer class="mt-12 pt-6 border-t-2 border-slate-200 text-center">
+            <p class="text-slate-600 font-medium">Creado por:</p>
+            <p class="text-green-800 font-bold text-lg">Centro de Innovación en TIC para el apoyo de la Docencia CINTIA</p>
+            <p class="text-slate-500 text-sm">Universidad de Córdoba</p>
+        </footer>
+    `;
+    document.querySelectorAll('.content-pane').forEach(pane => {
+        pane.insertAdjacentHTML('beforeend', footerHTML);
+    });
+</script>
+</body>
+</html>
